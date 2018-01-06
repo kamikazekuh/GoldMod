@@ -1,0 +1,11 @@
+block load
+{
+	es_load goldmod/goldblocks
+	es_load goldmod/goldevents
+}
+
+block unload
+{
+	es_unload goldmod/goldblocks
+	es_unload goldmod/goldevents
+}

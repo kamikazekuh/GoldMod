@@ -1,0 +1,232 @@
+block load
+{
+	es_xset fA 0
+	es_xset fB 0
+	es_xset FC 0
+	es_xset gold_tmp 0
+	es_xset one_time_items "Half Armor;Full Armor;+50 Clip(Secondary);+150 CLip(150 Clip Primary);Half Potion;30Xp;Full Potion;60Xp;1 Level;2 Levels"
+	es_xset eventscripts_noisy 1
+}
+
+
+event player_spawn
+{
+	es wcsgroup get gold_disguise gold_tmp event_var(userid)
+	if (server_var(gold_tmp) = 1) do
+	{
+		es wcs_setfx disguise server_var(gold_userid) = 1 0
+		es_tell event_var(userid) #multi #green[WCS] #lightgreenDisguise#green activated
+	}
+	es wcsgroup get gold_gravity gold_tmp event_var(userid)
+	if (server_var(gold_tmp) = 1) do
+	{
+		es wcs_setfx gravity event_var(userid) - 0.15 0
+		es_tell event_var(userid) #multi #green[WCS] #lightgreenSock of the Feather#green activated
+	}
+	es wcsgroup get gold_speed gold_tmp event_var(userid)
+	if (server_var(gold_tmp) = 1) do
+	{
+		es playerset speedadd event_var(userid) 0.2
+		es_tell event_var(userid) #multi #green[WCS] #lightgreenBoots of Speed#green activated
+	}
+	es wcsgroup get gold_longjump gold_tmp event_var(userid)
+	if (server_var(gold_tmp) = 1) do
+	{
+		es_delayed 0.1 wcs_setfx longjump event_var(userid) + 0.2 0
+		es_tell event_var(userid) #multi #green[WCS] #lightgreenLong Jump#green activated
+	}
+	es wcsgroup get gold_invis gold_tmp event_var(userid)
+	if (server_var(gold_tmp) = 1) do
+	{
+		es_delayed 1 wcs_color event_var(userid) 255 255 255 55
+		es_tell event_var(userid) #multi #green[WCS] #lightgreenPartial Invisibility#green activated
+	}
+	es wcsgroup get gold_falldamage gold_tmp event_var(userid)
+	if (server_var(gold_tmp) = 1) do
+	{
+		es_tell event_var(userid) #multi #green[WCS] #lightgreenPadded Armor#green activated
+	}
+	es wcsgroup get gold_ps gold_tmp event_var(userid)
+	if (server_var(gold_tmp) = 1) do
+	{
+		es_give event_var(userid) weapon_smokegrenade
+		es_tell event_var(userid) #multi #green[WCS] #lightgreenPoison Smoke Grenades#green activated
+	}
+	es wcsgroup get gold_fg gold_tmp event_var(userid)
+	if (server_var(gold_tmp) = 1) do
+	{
+		es_give event_var(userid) weapon_hegrenade
+		es_tell event_var(userid) #multi #green[WCS] #lightgreenFire Grenades#green activated
+	}	
+	es wcsgroup get gold_tfb gold_tmp event_var(userid)
+	if (server_var(gold_tmp) = 1) do
+	{
+		es_give event_var(userid) weapon_flashbang
+		es_tell event_var(userid) #multi #green[WCS] #lightgreenTeleport Flash Bangs#green activated
+	}	
+	es wcsgroup get gold_climb gold_tmp event_var(userid)
+	if (server_var(gold_tmp) = 1) do
+	{
+		es_setplayerprop event_var(userid) CCSPlayer.baseclass.localdata.m_Local.m_flStepSize 200
+		es_tell event_var(userid) #multi #green[WCS] #lightgreenSpiked Claws-Cleets#green activated
+	}	
+ 
+}
+	
+event player_falldamage
+{
+	es wcsgroup get gold_falldamage gold_tmp event_var(userid)
+	if (server_var(gold_tmp) = "1") do
+	{
+		es_set falldamage event_var(damage)
+		es playerset healthadd event_var(userid) server_var(falldamage)
+		es wcs_decimal falldamage server_var(falldamage)
+		if (event_var(damage) <= 100) then es_tell event_var(userid) #multi #green[WCS] #lightgreenAnti Fall Damage Prevented#green server_var(falldamage) #lightgreenDamage!
+	}
+}
+
+event smokegrenade_detonate
+{
+	es wcsgroup get gold_ps gold_tmp event_var(userid)
+	if (server_var(gold_tmp) = 1) do
+	{
+		es_xset smoke_loc 0
+		es_xset coords 0
+		es poison_smoke event_var(x) event_var(y) event_var(z) event_var(userid) 150 1 0.5 10
+		es_playsound event_var(userid) ambient/machines/gas_loop_1.wav 1
+		es_delayed 8 es_stopsound event_var(userid) ambient/machines/gas_loop_1.wav
+		es_playsound event_var(userid) weapons\flashbang\flashbang_explode2.wav 1
+		es_playsound event_var(userid) weapons\smokegrenade\sg_explode.wav 1
+		es_delayed .4 es_stopsound event_var(userid) weapons\smokegrenade\sg_explode.wav
+		es_xset SpreadSpeed "SpreadSpeed 100"
+		es_xset SmokeSpeed "Speed 40"
+		es_xset StartSize "StartSize 35"
+		es_xset EndSize "EndSize 40"
+		es_xset SmokeRate "Rate 200"
+		es_xset JetLength "JetLength 200"
+		es_xset SmokeBallTime 22
+		es_xset coords 0
+		es_format coords "origin %1 %2 %3" event_var(x) event_var(y) event_var(z)
+		es_entcreate event_var(userid) env_steam
+		es_fire event_var(userid) env_steam addoutput server_var(SpreadSpeed)
+		es_fire event_var(userid) env_steam addoutput server_var(SmokeSpeed)
+		es_fire event_var(userid) env_steam addoutput server_var(StartSize)
+		es_fire event_var(userid) env_steam addoutput server_var(EndSize)
+		es_fire event_var(userid) env_steam addoutput server_var(SmokeRate)
+		es_fire event_var(userid) env_steam addoutput server_var(JetLength)
+		es_fire event_var(userid) env_steam addoutput "rendercolor 20 10 200"
+		es_fire event_var(userid) env_steam addoutput server_var(coords)
+		es_fire event_var(userid) env_steam addoutput "rollspeed 10"
+		es_delayed 1 es_fire event_var(userid) env_steam TurnOn
+		es_delayed 20 es_fire event_var(userid) env_steam kill
+	}
+}
+
+event hegrenade_detonate
+{
+	es poison_smoke event_var(x) event_var(y) event_var(z) 150 1 0.5 12
+	es wcsgroup get gold_fg gold_tmp event_var(userid)
+	if (server_var(gold_tmp) = 1) do
+	{
+		es wcs_create_fire event_var(x) event_var(y) event_var(z) 500 12
+	}
+}
+
+event flashbang_detonate
+{
+	es wcsgroup get gold_tfb gold_tmp event_var(userid)
+	if (server_var(gold_tmp) = 1) do
+	{
+		es_xset coords 0
+		es_format coords "origin %1 %2 %3" event_var(x) event_var(y) event_var(z)
+		es_entcreate event_var(userid) env_spark 
+		es_fire event_var(userid) env_spark addoutput "Magnitude 3" 
+		es_fire event_var(userid) env_spark addoutput "TrailLength 8"	
+		es_fire event_var(userid) env_spark addoutput "spawnflags 128" 
+		es_fire event_var(userid) env_spark StartSpark 
+		es_fire event_var(userid) env_spark addoutput server_var(coords)
+		es_delayed 4 es_fire event_var(userid) env_spark kill
+		es_delayed 0.1 wcs_teleport event_var(userid) event_var(x) event_var(y) event_var(z)
+		es playerset location event_var(userid) event_var(x) event_var(y) event_var(z)
+	}
+}
+
+event player_hurt
+{
+	es_exists ex userid event_var(attacker)
+	if (server_var(ex) = 1) do
+	{
+		if (event_var(es_userteam) != event_var(es_attackerteam)) do
+		{
+			es wcsgroup get gold_helmet gold_tmp event_var(userid)
+			if (event_var(hitgroup) = 1) do
+			{
+				es playerset health event_var(userid) + event_var(dmg_health)
+				es_tell event_var(userid) #multi #default Gold Helmet#lightgreenPrevented Damage		
+			}
+			es wcsgroup get attack gold_attack event_var(attacker)
+			if (server_var(gold_attack) != 0) do
+			{
+				es_format gold_format "goldmod/goldblocks/%1a" server_var(gold_attack)
+				es wcsgroup set attack event_var(attacker) 0
+				es_delayed 3 wcsgroup set attack event_var(attacker) server_var(gold_attack) 
+				es_doblock server_var(gold_format)
+			}
+		}
+	}
+}
+
+event round_end
+{
+	es foreach player gold_tmp #all "es gold_remove_item server_var(gold_tmp) server_var(one_time_items)"
+}
+
+event bullet_impact
+{
+	es wcsgroup get gold_slingshot gold_tmp event_var(userid)
+	if (server_var(gold_tmp) = 1) do
+	{
+		
+			es_getplayerprop fA event_var(userid) "CBaseEntity.m_vecOrigin"
+			es_createvectorstring fB event_var(x) event_var(y) event_var(z)
+			es_createvectorfrompoints FC server_var(fA) server_var(fB)
+			es_setplayerprop event_var(userid) "CCSPlayer.baseclass.localdata.m_vecBaseVelocity" server_var(FC)
+			es_playsound event_var(userid) common\bass.wav 0.3
+	}
+}
+
+event player_death
+{
+	es_cexec event_var(userid) r_screenoverlay 0
+	es wcsgroup get gold_reincarnate gold_tmp event_var(userid)
+	if (server_var(gold_tmp) = 1) do
+	{
+		es wcsgroup set gold_reincarnate event_var(userid) 0
+		es_delayed 3 wcs spawn event_var(userid) 1
+		es_tell event_var(userid) #multi #green[WCS] #lightgreen You will be #green Reincarnated #lightgreen in #default 3 #lightgreen seconds.
+	}
+	es wcsgroup get gold_resurrect gold_tmp event_var(userid)
+	if (server_var(gold_tmp) = 1) do
+	{
+		es wcsgroup set ressurect event_var(userid) 0
+		es_getplayerlocation gold_x1 gold_y1 gold_z1 event_var(userid)
+		es_tell event_var(userid) #multi #green[WCS] #lightgreen You will be #green Resurrected #lightgreen in #default 3 #lightgreen seconds.
+		es_delayed 3 es wcs spawn event_var(userid) 1
+		es_delayed 3 es playerset location event_var(userid) server_var(gold_x1) server_var(gold_y1) server_var(gold_z1)
+	}
+	es wcsgroup set gold_gravity event_var(userid) 0
+	es wcsgroup set gold_speed event_var(userid) 0
+	es wcsgroup set gold_longjump event_var(userid) 0
+	es wcsgroup set gold_invis event_var(userid) 0
+	es wcsgroup set gold_falldamage event_var(userid) 0
+	es wcsgroup set gold_ps event_var(userid) 0
+	es wcsgroup set gold_fg event_var(userid) 0
+	es wcsgroup set gold_tfb event_var(userid) 0
+	es wcsgroup set gold_attack event_var(userid) 0
+	es wcsgroup set gold_climb event_var(userid) 0
+	es wcsgroup set gold_slingshot event_var(userid) 0
+	es wcsgroup set attack event_var(userid) 0
+	es wcsgroup set gold_helmet event_var(userid) 0
+	es gold_remove_item event_var(userid) all
+	}
+}

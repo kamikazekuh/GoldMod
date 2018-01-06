@@ -1,0 +1,425 @@
+block load
+{
+	es_xset gold_health 0
+	es_xset gold_speed 0
+	es_xset gold_gravity 0
+	es_xset gold_armor 0
+	es_xset gold_longjump 0
+	es_xset gold_invis 0
+	es_xset gold_clip 0
+	es_xset gold_fade 0
+	es_xset gold_falldamage 0
+	es_xset gold_ammo 0
+	es_xset gold_alive 0
+	es_xset gold_primary 0
+	es_xset gold_secondary 0
+	es_xset gold_bomber 0
+	es_xset gold_helmet 0
+	es_xset gold_team 0
+	es_xset goldammo1 0
+	es_xset goldammo2 0
+	es_xset gold_ps 0
+	es_xset gold_fg 0
+	es_xset gold_tfb 0
+	es_xset gold_attack 0
+	es_xset gold_climb 0
+	es_xset gold_reincarnate 0
+	es_xset gold_resurrect 0
+	es_xset gold_ex 0
+	es_xset gold_c4tele 0
+	es_xset gold_tmpsteam 0
+	es_xset gold_use 0
+	es_xset gold_iduser 0
+	es_xset targetid 0
+	es_xset gold_v1 0
+	es_xset gold_v2 0
+	es_xset gold_- 0
+	es_xset gold_x1 0
+	es_xset gold_y1 0
+	es_xset gold_z1 0
+	es_xset gold_x2 0
+	es_xset gold_y2 0
+	es_xset gold_z2 0
+	es_xset gold_x3 0
+	es_xset gold_y3 0
+	es_xset gold_z3 0
+	es_xset gold_math 0
+}
+
+
+block halfarmor
+{
+	es playerset armoradd server_var(gold_userid) 50
+}
+	
+block fullarmor
+{
+	es playerset armoradd server_var(gold_userid) 100
+}
+
+block 50hp
+{
+	es playerset healthadd server_var(gold_userid) 50
+}
+
+block 100hp
+{
+	es playerset healthadd server_var(gold_userid) 100
+}
+
+block speed
+{
+	es playerset speedadd server_var(gold_userid) 0.2
+	es wcsgroup set gold_speed server_var(gold_userid) 1
+}
+
+block gravity
+{
+	es wcs_setfx gravity server_var(gold_userid) - 0.15 0
+	es wcsgroup set gold_gravity server_var(gold_userid) 1
+}
+
+block longjump
+{
+	es wcs_setfx longjump server_var(gold_userid) + 0.2 0
+	es wcsgroup set gold_longjump server_var(gold_userid) 1
+}
+
+block invisibility
+{
+	es wcs_color server_var(gold_userid) 255 255 255 55
+	es wcsgroup set gold_invis server_var(gold_userid) 1
+}
+
+block flicker
+{
+	es_fire server_var(gold_userid) !self addoutput "renderfx 12"
+}
+
+block blink
+{
+	es_fire server_var(gold_userid) !self addoutput "renderfx 11"
+}
+
+block antifall
+{
+	es wcsgroup set gold_falldamage server_var(gold_userid) 1
+}
+
+block step
+{
+	es_setplayerprop server_var(gold_userid) CCSPlayer.baseclass.localdata.m_Local.m_flStepSize 200
+	es_tell server_var(gold_userid) #multi #lightgreen You have increased your Step Size by #green 200
+}
+
+block helmet
+{
+	es wcsgroup set gold_helmet server_var(gold_userid) 1
+}
+
+block 50clip
+{			 
+	es wcs_getweapon event_var(userid) gold_tmp 2
+	if ("weapon_" in server_var(gold_tmp)) do
+	{
+		es wcs_setfx 2ndclip event_var(userid) + 50 0
+	}
+	else do
+	{
+		es_tell server_var(gold_userid) #multi #green[WCS] #lightgreenYou need a #greensecondary weapon #lightgreento buy this item.
+		es wcs_givegold server_var(gold_userid) 350 "as a refund"
+	}
+}
+
+block 150clip
+{
+	es wcs_getweapon event_var(userid) gold_tmp 1
+	if ("weapon_" in server_var(gold_tmp)) do
+	{
+		es wcs_setfx 1stclip event_var(userid) + 150 0
+	}
+	else do
+	{
+		es_tell server_var(gold_userid) #multi #green[WCS] #lightgreenYou need a #greenprimary weapon #lightgreento buy this item.
+		es wcs_givegold server_var(gold_userid) 500 "as a refund"
+	}
+}
+
+block respawn
+{
+	es playerget isdead gold_tmp server_var(gold_userid)
+	if (server_var(gold_tmp) == 1) do
+	{
+		es_delayed 3 wcs spawn server_var(gold_userid) 1
+		es_tell server_var(gold_userid) #multi #lightgreenYou will #greenRespawn in #green3 #lightgreenseconds.
+	}
+	else do
+	{
+		es_tell server_var(gold_userid) #multi #green[WCS] #lightgreenYou must be #greendead #lightgreento buy this item.
+		es wcs_givegold server_var(gold_userid) 500 "as a refund"
+	}
+}
+
+block 30xp
+{
+	es wcs_givexp server_var(gold_userid) 30 0 1 
+}
+
+block 60xp
+{
+	es wcs_givexp server_var(gold_userid) 60 0 1 
+}
+
+block 1level
+{
+	es wcs_givelevel server_var(gold_userid) 1 
+}
+
+
+block 2level
+{
+	es wcs_givelevel server_var(gold_userid) 2 
+}
+
+block reincarnate
+{
+	es wcsgroup set gold_reincarnate server_var(gold_userid) 1
+}
+
+block resurrect
+{
+	es wcsgroup set gold_resurrect server_var(gold_userid) 1
+}
+
+block disguise
+{
+	es_getplayerteam gold_tmp server_var(gold_userid)
+	es_set gold_math 5
+	es_math gold_math - server_var(gold_tmp)
+	es wcs_setfx disguise server_var(gold_userid) = server_var(gold_math) 0
+	es wcsgroup set gold_disguise server_var(gold_userid) 1
+}
+
+block ps
+{
+	es wcsgroup set gold_ps server_var(gold_userid) 1
+	es_give server_var(gold_userid) weapon_smokegrenade
+	es playerset ammo server_var(gold_userid) weapon_smokegrenade 4
+}
+
+block fg
+{
+	es wcsgroup set gold_fg server_var(gold_userid) 1
+	es_give server_var(gold_userid) weapon_hegrenade
+	es playerset ammo server_var(gold_userid) weapon_hegrenade 4
+}
+
+block tfb
+{
+	es wcsgroup set gold_tfb server_var(gold_userid) 1
+	es_give server_var(gold_userid) weapon_flashbang
+	es playerset ammo server_var(gold_userid) weapon_flashbang 4
+}
+
+block slingshot
+{
+	es wcsgroup set gold_slingshot server_var(gold_userid) 1
+	es_tell event_var(userid) #multi #lightgreen Use your #greenglock #lightgreen to #greenSlingShot#lightgreen around the map
+}
+
+block fireball
+{
+	es_playsound server_var(gold_userid) ambient/fire/mtov_flame2.wav 1
+	es_getplayerlocation gold_x1 gold_y1 gold_z1 server_var(gold_userid)
+	es_xmath gold_z1 + 60
+	es est_effect 11 #a 0 sprites/xfireball3.vmt server_var(gold_x1) server_var(gold_y1) server_var(gold_z1) 3 1 255
+	es wcsgroup set attack server_var(gold_userid) fireball
+}
+
+block fireballa
+{
+	es wcs_dealdamage event_var(userid) event_var(attacker) 7
+	es_getplayerlocation gold_x1 gold_y1 gold_z1 event_var(userid)
+	es_xmath gold_z1 + 45
+	es est_effect 11 #a 0 sprites/xfireball3.vmt server_var(gold_x1) server_var(gold_y1) server_var(gold_z1) 4 2 255
+	es_tell event_var(attacker) #multi #green[FireBall] #lightgreen caused #green7 #lightgreen extra damage
+}
+
+block thunder
+{
+	es_playsound server_var(gold_userid) ambient/atmosphere/thunder1.wav 1
+	es_getplayerlocation gold_x1 gold_y1 gold_z1 server_var(gold_userid)
+	es est_effect 10 #a 0 sprites/lgtning.vmt server_var(gold_x1) server_var(gold_y1) server_var(gold_z1) 20 500 1 100 300 1.8 175 175 255 255 1
+	es wcsgroup set attack server_var(gold_userid) thunder
+}
+
+block thundera
+{
+	es_playsound event_var(userid) ambient/atmosphere/thunder1.wav 1
+	es_playsound event_var(attacker) ambient/atmosphere/thunder1.wav 1
+	es_getplayerlocation gold_x1 gold_y1 gold_z1 event_var(userid)
+	es est_effect 10 #a 0 sprites/lgtning.vmt server_var(gold_x1) server_var(gold_y1) server_var(gold_z1) 20 500 1 100 300 1.8 175 175 255 255 1
+	es wcs_dealdamage event_var(userid) event_var(attacker) 10
+	es_tell event_var(userid) #multi #lightgreenYou got #greenThunder Struck!
+	es_tell event_var(attacker) #multi #greenThunder Struck!
+}
+
+block shock
+{
+	es_playsound server_var(gold_userid) npc/scanner/scanner_electric1.wav 1
+	es_getplayerlocation gold_x1 gold_y1 gold_z1 server_var(gold_userid)
+	es_xmath gold_z1 + 55
+	es est_effect 11 #a 0 sprites/physring1.vmt server_var(gold_x1) server_var(gold_y1) server_var(gold_z1) 3 1 255
+	es wcsgroup set attack server_var(gold_userid) shock
+}
+
+block shocka
+{
+	es_playsound event_var(userid) npc/scanner/scanner_electric1.wav 1
+	es_playsound event_var(attacker) npc/scanner/scanner_electric1.wav 1
+	es_getplayerlocation gold_x1 gold_y1 gold_z1 event_var(userid)
+	es_xmath gold_z1 + 50
+	es est_effect 11 #a 0 sprites/physring1.vmt server_var(gold_x1) server_var(gold_y1) server_var(gold_z1) 3 1 255
+	es_tell event_var(attacker) #multi #lightgreen Electric Shock
+	es_tell event_var(userid) #multi #lightgreenYou got stunned by #green event_var(es_attackername)
+	es wcs_setfx speed event_var(userid) = 0.7 3
+}
+
+block burnblind
+{
+	es_playsound server_var(gold_userid) ambient/fire/mtov_flame2.wav 1
+	es_getplayerlocation gold_x1 gold_y1 gold_z1 server_var(gold_userid)
+	es est_effect 11 #a 0 sprites/fire2.vmt server_var(gold_x1) server_var(gold_y1) server_var(gold_z1) 1 3.5 150
+	es wcsgroup set attack server_var(gold_userid) burnblind
+}
+
+block burnblinda
+{
+	es_getplayerlocation gold_x2 gold_y2 gold_z2 event_var(userid)
+	es_getplayerlocation gold_x1 gold_y1 gold_z1 event_var(attacker)
+	es est_effect 10 #a 0 sprites/lgtning.vmt server_var(gold_x2) server_var(gold_y2) server_var(gold_z2) 20 500 3 100 100 0 255 55 0 255 10
+	es_xmath gold_z1 + 20
+	es_xmath gold_z2 + 20
+	es est_effect 3 #a 0 sprites/glow.vmt server_var(gold_x1) server_var(gold_y1) server_var(gold_z1) server_var(gold_x2) server_var(gold_y2) server_var(gold_z2) 0.5 11 6 255 50 0 255
+	es est_effect 11 #a 0 sprites/lgtning.vmt server_var(gold_x2) server_var(gold_y2) server_var(gold_z2) 3 2 255
+	es_playsound event_var(userid) npc/ichthyosaur/attack_growl2.wav 1
+	es wcs_setfx blind event_var(userid) = 1 200
+	es wcs_setfx burn event_var(userid) = 1 3
+	es_tell event_var(attacker) #multi #lightgreenYou have burned and blinded #green event_var(es_username)
+	es_tell event_var(userid) #multi #lightgreen you have been burned and blinded
+}
+
+block frostshot
+{
+	es_playsound server_var(gold_userid) ambient/fire/mtov_flame2.wav 1
+	es_getplayerlocation gold_x1 gold_y1 gold_z1 server_var(gold_userid)
+	es est_effect 10 #a 0 sprites/lgtning.vmt server_var(gold_x1) server_var(gold_y1) server_var(gold_z1) 20 100 1 20 100 1 100 155 255 255 10
+	es wcsgroup set attack server_var(gold_userid) frostshot
+}
+
+block frostshota
+{
+	es_playsound event_var(userid) weapons/hegrenade/explode4.wav 1
+	es wcs_setfx freeze event_var(userid) = 1 1
+	es wcs_setfx burn event_var(userid) = 1 1
+	es_delayed .2 es wcs_color event_var(userid) 25 25 255 255
+	es_delayed .7 es wcs_color event_var(userid) 255 25 25 255
+	es_delayed 2.2 es wcs_color event_var(userid) 255 255 255 255
+	es_getplayerlocation gold_x2 gold_y2 gold_z2 event_var(attacker)
+	es_getplayerlocation gold_x1 gold_y1 gold_z1 event_var(userid)
+	es_xmath gold_z2 + 50
+	es_createvectorstring vector1 server_var(gold_x1)	server_var(gold_y1) server_var(gold_z1)
+	es_createvectorstring vector2 server_var(gold_x2)	server_var(gold_y2) server_var(gold_z2)
+	es est_effect_06 #a 0 sprites/glow_test02.vmt server_var(vector1) server_var(vector2) 100 1.5 8 5 0 0 128 128 255 255 100
+	es_delayed 1.3 es est_effect_06 #a 0 sprites/crystal_beam1.vmt server_var(vector2) server_var(vector1) 100 1.5 8 5 0 0 228 128 28 255 100
+	es_xmath gold_y2 + 50
+	es_createvectorstring vector1 server_var(gold_x1)	server_var(gold_y1) server_var(gold_z1)
+	es_createvectorstring vector2 server_var(gold_x2)	server_var(gold_y2) server_var(gold_z2)
+	es_delayed 1.6 es est_effect_06 #a 0.1 sprites/crystal_beam1.vmt server_var(vector2) server_var(vector1) 100 1.5 8 5 0 0 228 128 28 255 100
+	es est_effect_06 #a 0.1 sprites/glow_test02.vmt server_var(vector1) server_var(vector2) 100 1.5 8 5 0 0 128 128 255 255 100
+	es_xmath gold_y2 - 100
+	es_createvectorstring vector1 server_var(gold_x1)	server_var(gold_y1) server_var(gold_z1)
+	es_createvectorstring vector2 server_var(gold_x2)	server_var(gold_y2) server_var(gold_z2)
+	es_delayed 1.3 es est_effect_06 #a 0.2 sprites/crystal_beam1.vmt server_var(vector2) server_var(vector1) 100 1.5 8 5 0 0 228 128 28 255 100
+	es_delayed 1.3 es est_effect 10 #a 0 sprites/lgtning.vmt server_var(gold_x1) server_var(gold_y1) server_var(gold_z1) 20 200 1.5 60 100 0 228 128 28 255 1
+	es_delayed 1.3 es est_effect 10 #a 0 sprites/lgtning.vmt server_var(gold_x1) server_var(gold_y1) server_var(gold_z1) 200 20 1.5 60 100 0 228 128 28 255 1
+	es est_effect_06 #a 0.2 sprites/glow_test02.vmt server_var(vector1) server_var(vector2) 100 1.5 8 5 0 0 128 128 255 255 100
+	es est_effect 10 #a 0 sprites/lgtning.vmt server_var(gold_x1) server_var(gold_y1) server_var(gold_z1) 20 200 1.5 60 100 0 55 55 157 255 1
+	es est_effect 10 #a 0 sprites/lgtning.vmt server_var(gold_x1) server_var(gold_y1) server_var(gold_z1) 200 20 1.5 60 100 0 55 55 157 255 1
+	es est_effect 11 #a 0 sprites/blueglow1.vmt server_var(gold_x1) server_var(gold_y1) server_var(gold_z1) 1.5 2 155
+	es_delayed 1.3 es est_effect 11 #a 0 sprites/fire2.vmt server_var(gold_x1) server_var(gold_y1) server_var(gold_z1) 1.5 5 155
+	es_tell event_var(attacker) #multi #lightgreen You hit #green event_var(es_username) with #green [Frost Fire]
+	es_tell event_var(userid) #multi #green event_var(es_attackername)	#lightgreen hit you with #green [Frost Fire]
+}
+
+block blast
+{
+	es wcsgroup set attack server_var(gold_userid) blast
+}
+
+block blasta
+{
+	es_getplayerlocation gold_x1 gold_y1 gold_z1 event_var(attacker)
+	es_getplayerlocation gold_x2 gold_y2 gold_z2 event_var(userid)
+	es_xset vector1 gold_z1
+	es_xset vector2 gold_z2
+	es_createvectorstring vector1 server_var(gold_x1) server_var(gold_y1) server_var(gold_z1)
+	es_createvectorstring vector2 server_var(gold_x2) server_var(gold_y2) server_var(gold_z2)
+	es est_effect_06 #a .2 sprites/plasmaember.vmt server_var(vector2) server_var(vector1) 100 1 15 10 10 0 228 28 228 255 100 
+	es_xmath gold_y1 + 50
+	es_xmath gold_x1 + 50
+	es_createvectorstring vector1 server_var(gold_x1) server_var(gold_y1) server_var(gold_z1)
+	es_createvectorstring vector2 server_var(gold_x2) server_var(gold_y2) server_var(gold_z2)
+	es est_effect_06 #a .2 sprites/glow07.vmt server_var(vector2) server_var(vector1) 100 1 15 10 10 0 0 255 255 255 100
+	es_delayed 2.1 es est_effect_06 #a .2 sprites/glow07.vmt server_var(vector2) server_var(vector1) 100 .3 15 10 10 0 0 255 255 255 100
+	es_xmath gold_y1 - 100
+	es_xmath gold_x1 - 100
+	es_createvectorstring vector1 server_var(gold_x1) server_var(gold_y1) server_var(gold_z1)
+	es_createvectorstring vector2 server_var(gold_x2) server_var(gold_y2) server_var(gold_z2)
+	es est_effect_06 #a .2 sprites/glow07.vmt server_var(vector2) server_var(vector1) 100 1 15 10 10 0 0 255 255 255 100
+	es est_effect_18 #a .3 server_var(vector2) 255 10 255 40 300 13 420
+	es_delayed 1.5 es est_effect_18 #a .3 server_var(vector2) 255 10 255 40 300 13 420
+	es_delayed 2.1 es est_effect_18 #a .3 server_var(vector2) 255 10 255 40 300 13 420
+	es_delayed 2.5 es est_effect_18 #a .3 server_var(vector2) 255 10 255 40 300 13 420
+	es_delayed 1.5 es est_effect_06 #a .2 sprites/glow07.vmt server_var(vector2) server_var(vector1) 100 .3 15 10 10 0 0 255 255 255 100
+	es_delayed 2.5 es est_effect_06 #a .2 sprites/glow07.vmt server_var(vector2) server_var(vector1) 100 .3 15 10 10 0 0 255 255 255 100
+	es_playsound event_var(userid) ambient/levels/citadel/portal_beam_shoot4.wav 1
+	es_playsound event_var(attacker) ambient/levels/citadel/portal_beam_shoot4.wav 1
+}
+
+block astrial
+{
+	es wcsgroup set attack server_var(gold_userid) astrial
+}
+
+block astriala
+{
+	es_getplayerlocation gold_x1 gold_y1 gold_z1 event_var(attacker)
+	es_getplayerlocation gold_x2 gold_y2 gold_z2 event_var(userid) 
+	es_xmath gold_z1 + 40
+	es_createvectorstring gold_v1 server_var(gold_x1) server_var(gold_y1) server_var(gold_z1)
+	es_createvectorstring gold_v2 server_var(gold_x2) server_var(gold_y2) server_var(gold_z2)
+	es est_effect_06 #a 0 sprites/orangeflare1.vmt server_var(gold_v2) server_var(gold_v1) 100 1 10 10 10 0 255 255 255 255 100
+	es est_effect_18 #a 0 server_var(gold_v2) 255 128 55 50 150 30 75		
+	es est_effect 10 #a 0 sprites/orangeflare1.vmt server_var(gold_x2) server_var(gold_y2) server_var(gold_z2) 200 199 1.5 35 25 0 255 255 255 255 10
+	es playerset location event_var(userid) 0 0 900
+	es playerset freeze event_var(userid) 1
+	es_delayed 1 es playerset location event_var(userid) server_var(gold_x2) server_var(gold_y2) server_var(gold_z2)				 
+	es_delayed 1 es playerset freeze event_var(userid) 0
+	es wcs_color event_var(userid) 255 255 255 0 
+	es_delayed 1 es wcs_color event_var(userid) 255 255 255 255 
+	es_cexec event_var(userid) r_screenoverlay models\props_lab\cornerunit_cloud.vmt
+	es_delayed .4 es_cexec event_var(userid) r_screenoverlay models\props_combine\masterinterface01c.vmt
+	es_delayed .6 es_cexec event_var(userid) r_screenoverlay effects/alyxmonitor_talk.vmt
+	es_delayed .8 es_cexec event_var(userid) r_screenoverlay Decals\offaddress.vmt
+	es_delayed .9 es_cexec event_var(userid) r_screenoverlay effects/tvscreen_noise001a.vmt
+	es_delayed 1 es_cexec event_var(userid) r_screenoverlay effects/breenscreen_static01_.vmt
+	es_delayed 1.2 es_cexec event_var(userid) r_screenoverlay effects/c17_07camera.vmt
+	es_delayed 1.4 es_cexec event_var(userid) r_screenoverlay effects/prisonmap_disp.vmt
+	es_delayed 1.6 es_cexec event_var(userid) r_screenoverlay models\props_lab\warp_sheet.vmt
+	es_delayed 1.8 es_cexec event_var(userid) r_screenoverlay 0
+	es_tell event_var(userid) #multi #lightgreen You have been teleported to an #green Astral Prison
+	es_tell event_var(attacker) #multi #lightgreen You have teleported #default event_var(es_username) to an #green Astral Prison	
+	es_playsound event_var(userid) ambient\levels\citadel\portal_beam_shoot1.wav 1
+	es_playsound event_var(attacker) ambient\levels\citadel\portal_beam_shoot1.wav 1 
+}

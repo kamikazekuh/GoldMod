@@ -1,0 +1,16 @@
+"gold_config"
+{
+	"gold_settings"
+	{
+		"gold_per_kill"		"15"
+		"headshot"		"5"
+		"knife"		"5"
+		"max_rounds" "3"
+  }
+
+	"sound"
+	{
+		"download_custom_sounds"		"1"
+		"new_item"		"HOLLIDAY/gold/promoted.wav"
+	}
+}
